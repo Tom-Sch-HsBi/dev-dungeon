@@ -36,6 +36,25 @@ public class SpeedEffect {
    * @param target The entity to which the speed effect will be applied.
    */
   public void applySpeedEffect(Entity target) {
-    throw new UnsupportedOperationException("Method not implemented.");
+      var velocityOpt = target.fetch(VelocityComponent.class);
+      if (velocityOpt.isEmpty()) {
+          throw new UnsupportedOperationException("SpeedEffect cant be apllied without VelocityComponent.");
+      }
+
+      VelocityComponent velocity = velocityOpt.get();
+
+      // Speed wert wird auf die Velocity gerechnet
+      float originalX = velocity.xVelocity();
+      float originalY = velocity.yVelocity();
+
+      // Setze neue Geschwindigkeit
+      velocity.xVelocity(originalX + speedIncrease);
+      velocity.yVelocity(originalY + speedIncrease);
+
+      // Nach ablaufen der zeit wird der Effekt weggenomen
+      EVENT_SCHEDULER.scheduleAction(() -> {
+          velocity.xVelocity(originalX);
+          velocity.yVelocity(originalY);
+      }, duration * 1000L); // Zeit in millisek
   }
 }
