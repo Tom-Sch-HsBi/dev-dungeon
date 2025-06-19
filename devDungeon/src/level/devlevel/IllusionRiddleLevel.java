@@ -293,17 +293,19 @@ public class IllusionRiddleLevel extends DevDungeonLevel implements ITickable {
 
   /** TODO: Refactor this method, and add JavaDoc */
   public void lightTorch(DevDungeonRoom r, int i, boolean lit) {
-    if (r.torches()[i]
-            .fetch(TorchComponent.class)
-            .orElseThrow(
-                () -> MissingComponentException.build(r.torches()[i], TorchComponent.class))
-            .lit()
-        == lit) return;
-    r.torches()[i]
-        .fetch(InteractionComponent.class)
-        .orElseThrow(
-            () -> MissingComponentException.build(r.torches()[i], InteractionComponent.class))
-        .triggerInteraction(r.torches()[i], Game.hero().orElse(null));
+      // Step 1: extract the torch entity for readability
+      Entity torch = r.torches()[i];
+
+      if (torch
+          .fetch(TorchComponent.class)
+          .orElseThrow(() -> MissingComponentException.build(torch, TorchComponent.class))
+          .lit()
+          == lit) return;
+
+      torch
+          .fetch(InteractionComponent.class)
+          .orElseThrow(() -> MissingComponentException.build(torch, InteractionComponent.class))
+          .triggerInteraction(torch, Game.hero().orElse(null));
   }
 
   /**
