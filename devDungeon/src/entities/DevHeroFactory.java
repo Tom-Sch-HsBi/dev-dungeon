@@ -22,11 +22,29 @@ import core.utils.components.MissingComponentException;
 import java.io.IOException;
 import java.util.Objects;
 import java.util.Optional;
+import entities.MonsterType;
 
 public class DevHeroFactory extends HeroFactory {
   public static final boolean ENABLE_MOUSE_MOVEMENT = true;
   private static Skill SKILL =
       new Skill(new BurningFireballSkill(SkillTools::cursorPositionAsPoint), 500L);
+
+    // Protector-Skill auf Taste "E" mit 5 Sekunden Cooldown
+    private static final Skill PROTECTOR_SKILL = new Skill(entity -> {
+        Point heroPos = SkillTools.heroPositionAsPoint();
+        float dx = (float) (Math.random() * 6 - 3);
+        float dy = (float) (Math.random() * 6 - 3);
+        Point spawnPoint = new Point(heroPos.x + dx, heroPos.y + dy);
+
+        try {
+            Entity protector = MonsterType.PROTECTOR.buildMonster();
+            protector.name("Protector");
+            protector.fetch(PositionComponent.class).ifPresent(p -> p.position(spawnPoint));
+            Game.add(protector);
+        } catch (IOException ex) {
+            System.err.println("Failed to create protector.");
+        }
+    }, 5); // Cooldown in Sekunden
 
   /**
    * Update the skill used by the hero.
@@ -66,6 +84,10 @@ public class DevHeroFactory extends HeroFactory {
 
     pc.registerCallback(
         KeyboardConfig.FIRST_SKILL.value(), heroEntity -> SKILL.execute(heroEntity));
+
+      // Taste "E" für den Protector-Skill
+      pc.registerCallback(
+          KeyboardConfig.PROTECTOR_SKILL.value(), heroEntity -> PROTECTOR_SKILL.execute(heroEntity));
 
     // Mouse movement
     if (ENABLE_MOUSE_MOVEMENT) {

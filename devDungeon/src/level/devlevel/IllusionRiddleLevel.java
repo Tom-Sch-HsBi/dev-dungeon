@@ -291,20 +291,41 @@ public class IllusionRiddleLevel extends DevDungeonLevel implements ITickable {
     this.riddleHandler.onTick(isFirstTick);
   }
 
-  /** TODO: Refactor this method, and add JavaDoc */
-  public void lightTorch(DevDungeonRoom r, int i, boolean lit) {
-    if (r.torches()[i]
+    /**
+     * Lights or extinguishes a specific torch in the given room based on the desired state.
+     * <p>
+     * This method retrieves the torch and its relevant components. If the torch is already
+     * in the desired state, no action is taken. Otherwise, it triggers the interaction
+     * to toggle the torch's state (e.g., lighting or extinguishing it).
+     *
+     * @param room   The {@link DevDungeonRoom} containing the torch.
+     * @param index   The index of the torch within the room's torch array.
+     * @param lit {@code true} if the torch should be lit; {@code false} to extinguish it.
+     *
+     * @throws MissingComponentException if the torch is missing either the {@link TorchComponent} or {@link InteractionComponent}.
+     *
+     */
+    // Variables changed to increase readability
+    public void lightTorch(DevDungeonRoom room, int index, boolean lit) {
+        Entity torch = room.torches()[index];
+        Entity hero = Game.hero().orElse(null);
+
+        // Fetch the torch component directly
+        TorchComponent torchComponent = torch
             .fetch(TorchComponent.class)
-            .orElseThrow(
-                () -> MissingComponentException.build(r.torches()[i], TorchComponent.class))
-            .lit()
-        == lit) return;
-    r.torches()[i]
-        .fetch(InteractionComponent.class)
-        .orElseThrow(
-            () -> MissingComponentException.build(r.torches()[i], InteractionComponent.class))
-        .triggerInteraction(r.torches()[i], Game.hero().orElse(null));
-  }
+            .orElseThrow(() -> MissingComponentException.build(torch, TorchComponent.class));
+
+        // If torch is already in desired state, return
+        if (torchComponent.lit() == lit) return;
+
+        // Fetch the interaction component directly
+        InteractionComponent interactionComponent = torch
+            .fetch(InteractionComponent.class)
+            .orElseThrow(() -> MissingComponentException.build(torch, InteractionComponent.class));
+
+        // Trigger the interaction to change the torch state
+        interactionComponent.triggerInteraction(torch, hero);
+    }
 
   /**
    * Returns the current room the hero is in.

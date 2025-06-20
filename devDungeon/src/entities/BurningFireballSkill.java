@@ -25,13 +25,13 @@ import systems.EventScheduler;
 public final class BurningFireballSkill extends DamageProjectile {
   private static final IPath PROJECTILE_TEXTURES = new SimpleIPath("skills/fireball");
   private static final IPath PROJECTILE_SOUND = new SimpleIPath("sounds/fireball.wav");
-  private static final float PROJECTILE_SPEED = 15.0f;
+  private static final float PROJECTILE_SPEED = 35.0f;
   private static final DamageType DAMAGE_TYPE = DamageType.FIRE;
   private static final Point HIT_BOX_SIZE = new Point(1, 1);
   private static final BurningEffect BURNING_EFFECT = new BurningEffect(1f, 1);
-  public static float PROJECTILE_RANGE = 7f;
+  public static float PROJECTILE_RANGE = 20f;
   public static boolean UNLOCKED = false;
-  public static int DAMAGE_AMOUNT = 2;
+  public static int DAMAGE_AMOUNT = 100;
 
   /**
    * Create a {@link DamageProjectile} that looks like a fireball and will cause fire damage.
