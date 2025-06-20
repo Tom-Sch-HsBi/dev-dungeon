@@ -89,4 +89,35 @@ public final class SkillTools {
                 () -> MissingComponentException.build(Game.hero().get(), PositionComponent.class));
     return pc.position();
   }
+
+  /**
+   * Gets the position of the nearest monster that is not the hero or a protector.
+   *
+   * @return The position of the nearest valid enemy as Point.
+   */
+  public static Point nearestEnemyPosition() {
+      core.Entity hero = Game.hero().orElse(null);
+      if (hero == null) return new Point(-999, -999);
+      Point heroPos = hero.fetch(PositionComponent.class)
+          .map(PositionComponent::position)
+          .orElse(new Point(-999, -999));
+
+      return Game.allEntities()
+          .filter(e -> e.fetch(PositionComponent.class).isPresent())
+          .filter(e -> e != hero) // Ignore Hero
+          .filter(e -> {
+              String name = e.name();
+              return name == null || !name.equals("Protector"); // Ignore Protectors
+          })
+          .min((a, b) -> {
+              Point p1 = a.fetch(PositionComponent.class).get().position();
+              Point p2 = b.fetch(PositionComponent.class).get().position();
+              return Float.compare(
+                  Point.calculateDistance(p1, heroPos),
+                  Point.calculateDistance(p2, heroPos));
+          })
+          .map(e -> e.fetch(PositionComponent.class).get().position())
+          .orElse(new Point(-999, -999));
+  }
+
 }
