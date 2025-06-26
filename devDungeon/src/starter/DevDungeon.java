@@ -22,7 +22,7 @@ public class DevDungeon {
   public static final DungeonLoader DUNGEON_LOADER =
       new DungeonLoader(
           new String[] {
-            /*"tutorial", */"damagedBridge", "torchRiddle", "illusionRiddle", "bridgeGuard", "finalBoss"
+            /*"damagedBridge", "torchRiddle", "illusionRiddle", */"bridgeGuard", "finalBoss"
           });
   private static final String BACKGROUND_MUSIC = "sounds/background.wav";
   private static final boolean SKIP_TUTORIAL = false;

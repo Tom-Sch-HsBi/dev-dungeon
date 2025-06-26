@@ -1,5 +1,7 @@
 package entities.levercommands;
 
+import core.Game;
+import core.level.elements.tile.PitTile;
 import core.level.utils.Coordinate;
 import utils.ICommand;
 
@@ -32,7 +34,12 @@ public class BridgeControlCommand implements ICommand {
    */
   @Override
   public void execute() {
-    // TODO: Implement bridge raising
+      Game.currentLevel()
+          .tilesInArea(topLeft, bottomRight)
+          .stream()
+          .filter(tile -> tile instanceof PitTile)
+          .map(tile -> (PitTile) tile)
+          .forEach(PitTile::open);
   }
 
   /**
@@ -43,6 +50,11 @@ public class BridgeControlCommand implements ICommand {
    */
   @Override
   public void undo() {
-    // TODO: Implement bridge lowering
+      Game.currentLevel()
+          .tilesInArea(topLeft, bottomRight)
+          .stream()
+          .filter(tile -> tile instanceof PitTile)
+          .map(tile -> (PitTile) tile)
+          .forEach(PitTile::close);
   }
 }
