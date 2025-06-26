@@ -72,4 +72,8 @@ public class KeyboardConfig {
   /** WTF? . */
   public static final ConfigKey<Integer> DEBUG_TELEPORT_TO_CURSOR =
       new ConfigKey<>(new String[] {"debug", "teleport_cursor"}, new ConfigIntValue(Input.Keys.O));
+
+  // Keybind for Protector skill
+  public static final ConfigKey<Integer> PROTECTOR_SKILL =
+      new ConfigKey<>(new String[] {"skill", "protector"}, new ConfigIntValue(Input.Keys.R));
 }

@@ -251,6 +251,27 @@ public enum MonsterType {
       10,
       2 * Game.frameRate(),
       MonsterIdleSound.BURP,
+      0),
+  PROTECTOR(
+      "Protector",
+      "character/monster/ice_zombie",
+      200,
+      7f,
+      0.0f,
+      MonsterDeathSound.HIGH_PITCH,
+      () -> new RangeAI(
+          6f,
+          0f,
+          new Skill(
+              new FireballSkill(SkillTools::nearestEnemyPosition),
+              AIFactory.FIREBALL_COOL_DOWN
+          )
+      ),
+      () -> entity -> {}, // no idle
+      () -> entity -> true, // always fight
+      0,
+      Game.frameRate(),
+      MonsterIdleSound.HIGH_PITCH,
       0);
 
   private final String name;
